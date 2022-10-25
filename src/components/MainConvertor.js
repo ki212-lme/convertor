@@ -51,8 +51,13 @@ export function MainConvertor(props) {
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={userCurrValue} onChange={(e) => {
-                    changeInputValue(e.target.value, convertSum(e.target.value,buyCurr,userCurr));
-                }}/>
+                    if(e.target.value===""){
+                        changeInputValue("","");
+                    }
+                    if (!isNaN(parseFloat(e.target.value)))
+                        changeInputValue(e.target.value, convertSum(e.target.value,buyCurr,userCurr));
+                    }
+                }/>
             </div>
 
             <div>
@@ -66,9 +71,12 @@ export function MainConvertor(props) {
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={buyCurrValue} onChange={(e) => {
+                    if(e.target.value===""){
+                        changeInputValue("","");
+                    }
                     if (!isNaN(parseFloat(e.target.value))) {
-                    changeInputValue(convertSum(e.target.value,userCurr,buyCurr), e.target.value);}
-                    else setState({...state, errInput: "Incorrect value"});
+                    changeInputValue(convertSum(e.target.value,userCurr,buyCurr), e.target.value);
+                    }
                 }}/>
             </div>
         </form>
