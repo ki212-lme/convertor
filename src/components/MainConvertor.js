@@ -5,18 +5,16 @@ function OptionsCurrency(props) {
     return currency.map(x => <option value={x.ccy} key={x.ccy}>{x.ccy}</option>);
 }
 
-
 export function MainConvertor(props) {
     const {currency} = props;
     const [state, setState] = useState({
         userCurr: "",
-        userCurrValue: 1,
+        userCurrValue: "",
         buyCurr: "",
-        buyCurrValue: 1,
+        buyCurrValue: "",
         errInput: null
     });
     const {userCurrValue, buyCurrValue, errInput, buyCurr, userCurr} = state;
-
     useEffect(() => {
         if (currency.length !== 0)
             setState({
@@ -26,44 +24,49 @@ export function MainConvertor(props) {
             })
     }, [currency])
 
-
-
+    const convertSum=(sum,receiver, sender)=>{
+        const buyReceiver = currency.find(x => x.ccy === receiver).buy;
+        const buySender =  currency.find(x => x.ccy === sender).buy;
+        return sum / buyReceiver * buySender;
+    }
+    const changeInputValue=(firInValue,senInValue)=>{
+        setState({
+            ...state,
+            userCurrValue: firInValue,
+            buyCurrValue: senInValue
+        });
+    }
+    // const changeValueBySelect(){
+    //
+    // }
     return (
-        <form onChange={(e) => {
-
-        }}>
+        <form onChange={(e) => {}}>
             {errInput ? <p>{errInput}</p> : <></>}
             <div>
                 <select value={userCurr} onChange={(e) =>{
                     setState({...state,
                         userCurr: e.target.value,
                         userCurrValue: userCurrValue,
-                        buyCurrValue: userCurrValue / currency.find(x => x.ccy === buyCurr).buy * currency.find(x => x.ccy === e.target.value).buy
+                        buyCurrValue: convertSum(userCurrValue,buyCurr,e.target.value)
                     })}}>
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={userCurrValue} onChange={(e) => {
-                    setState({
-                        ...state,
-                        userCurrValue: e.target.value,
-                        buyCurrValue:  e.target.value / currency.find(x => x.ccy === buyCurr).buy * currency.find(x => x.ccy === userCurr).buy
-                    });
+                    changeInputValue(e.target.value, convertSum(e.target.value,buyCurr,userCurr));
                 }}/>
             </div>
             <div>
                 <select value={buyCurr} onChange={(e) =>{
-                    setState({...state,
-                        buyCurr: e.target.value,
-                        userCurrValue: userCurrValue,
-                        buyCurrValue: userCurrValue /currency.find(x => x.ccy === e.target.value).buy * currency.find(x => x.ccy === userCurr).buy
-                    })}}>><OptionsCurrency currency={currency}/>
-                </select>
-                <input value={buyCurrValue} onChange={(e) => {
                     setState({
                         ...state,
-                        buyCurrValue: e.target.value,
-                        userCurrValue: e.target.value / currency.find(x => x.ccy === userCurr).buy * currency.find(x => x.ccy === buyCurr).buy
-                    });
+                        buyCurr: e.target.value,
+                        userCurrValue: userCurrValue,
+                        buyCurrValue: convertSum(userCurrValue,e.target.value,userCurr)
+                    })}}>>
+                    <OptionsCurrency currency={currency}/>
+                </select>
+                <input value={buyCurrValue} onChange={(e) => {
+                    changeInputValue(convertSum(e.target.value,userCurr,buyCurr), e.target.value);
                 }}/>
             </div>
         </form>
