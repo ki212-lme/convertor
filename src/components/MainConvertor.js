@@ -5,19 +5,20 @@ function OptionsCurrency(props) {
     return currency.map(x => <option value={x.ccy} key={x.ccy}>{x.ccy}</option>);
 }
 
+
 export function MainConvertor(props) {
     const {currency} = props;
     const [state, setState] = useState({
         userCurr: "",
-        userCurrValue: 0,
+        userCurrValue: 1,
         buyCurr: "",
-        buyCurrValue: 0,
+        buyCurrValue: 1,
         errInput: null
     });
     const {userCurrValue, buyCurrValue, errInput, buyCurr, userCurr} = state;
 
     useEffect(() => {
-        if (currency.length != 0)
+        if (currency.length !== 0)
             setState({
                 ...state,
                 userCurr: currency[0].ccy,
@@ -25,8 +26,11 @@ export function MainConvertor(props) {
             })
     }, [currency])
 
+
+
     return (
-        <form onChange={() => {
+        <form onChange={(e) => {
+        console.log(e.target)
         }}>
             {errInput ? <p>{errInput}</p> : <></>}
             <div>
@@ -34,15 +38,10 @@ export function MainConvertor(props) {
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={userCurrValue} onChange={(e) => {
-                    let CurrValue = e.target.value;
-                    if (isNaN(CurrValue)) {
-                        CurrValue = 0;
-                    }
-                    console.log(CurrValue / (currency.find(x => x.ccy === buyCurr)).buy * (currency.find(x => x.ccy === userCurr)).buy);
                     setState({
                         ...state,
-                        userCurrValue: CurrValue,
-                        buyCurrValue: CurrValue / currency.find(x => x.ccy === buyCurr).buy * currency.find(x => x.ccy === userCurr).buy
+                        userCurrValue: e.target.value,
+                        buyCurrValue:  e.target.value / currency.find(x => x.ccy === buyCurr).buy * currency.find(x => x.ccy === userCurr).buy
                     });
                 }}/>
             </div>
@@ -51,11 +50,11 @@ export function MainConvertor(props) {
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={buyCurrValue} onChange={(e) => {
-                    let CurrValue = e.target.value;
-                    if (isNaN(CurrValue)) {
-                        CurrValue = 0;
-                    }
-                    setState({...state, buyCurrValue: CurrValue})
+                    setState({
+                        ...state,
+                        buyCurrValue: e.target.value,
+                        userCurrValue: e.target.value / currency.find(x => x.ccy === userCurr).buy * currency.find(x => x.ccy === buyCurr).buy
+                    });
                 }}/>
             </div>
         </form>
