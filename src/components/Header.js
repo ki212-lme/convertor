@@ -10,7 +10,7 @@ export function Header(props) {
                 {props.currency.map(x =>x.ccy==="EUR"||x.ccy==="USD"?
                     <div key={x.ccy}>
                     <p>{x.ccy}</p>
-                    <div>{x.buy} {x.sale}</div>
+                    <div>{parseFloat(x.buy).toFixed(2)}</div>
                 </div>:null)}
             </div>
         </header>

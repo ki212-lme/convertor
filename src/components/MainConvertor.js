@@ -12,7 +12,6 @@ export function MainConvertor(props) {
         userCurrValue: "",
         buyCurr: "",
         buyCurrValue: "",
-        errInput: null
     });
     const {userCurrValue, buyCurrValue, errInput, buyCurr, userCurr} = state;
     useEffect(() => {
@@ -40,7 +39,7 @@ export function MainConvertor(props) {
     //
     // }
     return (
-        <form onChange={(e) => {}}>
+        <form className="convert-form">
             {errInput ? <p>{errInput}</p> : <></>}
             <div>
                 <select value={userCurr} onChange={(e) =>{
@@ -55,6 +54,7 @@ export function MainConvertor(props) {
                     changeInputValue(e.target.value, convertSum(e.target.value,buyCurr,userCurr));
                 }}/>
             </div>
+
             <div>
                 <select value={buyCurr} onChange={(e) =>{
                     setState({
@@ -66,7 +66,9 @@ export function MainConvertor(props) {
                     <OptionsCurrency currency={currency}/>
                 </select>
                 <input value={buyCurrValue} onChange={(e) => {
-                    changeInputValue(convertSum(e.target.value,userCurr,buyCurr), e.target.value);
+                    if (!isNaN(parseFloat(e.target.value))) {
+                    changeInputValue(convertSum(e.target.value,userCurr,buyCurr), e.target.value);}
+                    else setState({...state, errInput: "Incorrect value"});
                 }}/>
             </div>
         </form>

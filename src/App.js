@@ -8,15 +8,14 @@ function App() {
     const [currency, setCurrency] = useState([]);
     useEffect(() => {
         const data = queryToApi("https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11");
-
         data.then(res => {
             if (res)
                 setCurrency(res.concat({
                     ccy: "UAH",
                     buy: 1,
                     sale: 1,
-                }))
-        })
+                }).filter(x=>x.ccy!="BTC"))
+        });
     }, []);
 
     return (
